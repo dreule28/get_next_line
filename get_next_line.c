@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 07:59:13 by dreule            #+#    #+#             */
-/*   Updated: 2024/10/29 11:23:36 by dreule           ###   ########.fr       */
+/*   Updated: 2024/10/29 13:41:37 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,31 +54,31 @@ char	*ft_strdup_gnl(const char *s1)
 
 char	*extract_line(char **leftovers)
 {
-	char	*ex_line;
+	char	*ext_line;
 	char	*line_pos;
 	char	*temp_letfovers;
 
-	if (*leftovers == NULL)
+	if (!*leftovers)
 		return (NULL);
 	line_pos = ft_strchr_gnl(*leftovers, '\n');
 	if (line_pos)
 	{
 		*(line_pos + 1) = '\0';
-		ex_line = ft_strdup_gnl(*leftovers);
+		ext_line = ft_strdup_gnl(*leftovers);
 		temp_letfovers = ft_strdup_gnl(line_pos + 1);
 		free(*leftovers);
 		*leftovers = temp_letfovers;
 	}
 	else
 	{
-		ex_line = ft_strdup_gnl(*leftovers);
+		ext_line = ft_strdup_gnl(*leftovers);
 		free(*leftovers);
 		*leftovers = NULL;
 	}
-	return (ex_line);
+	return (ext_line);
 }
 
-size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
+size_t	ft_strlcat_gnl(char *dst, const char *src, size_t dstsize)
 {
 	size_t	dst_len;
 	size_t	src_len;
@@ -110,16 +110,24 @@ char	*get_next_line(int fd)
 	static char	*leftovers;
 	char		*found_line;
 	char		*buffer;
+	char		*combined;
+	size_t		bytes_read;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	found_line = extract_line(&leftovers);
 	if (found_line)
 		return (found_line);
-	buffer = malloc(sizeof(BUFFER_SIZE + 1));
-	buffer = read(fd, buffer, BUFFER_SIZE + 1);
-	if (buffer == -1)
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
 		return (NULL);
-	leftovers = NULL;
-	return (leftovers);
+	bytes_read = read(fd, buffer, BUFFER_SIZE + 1);
+	while (bytes_read > 0)
+	{
+		buffer[bytes_read] = '\0';
+		combined = malloc(ft_strlen_gnl(leftovers) + bytes_read + 1);
+		if (!combined)
+			free(buffer);
+		return (NULL);
+	}
 }
