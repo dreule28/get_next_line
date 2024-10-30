@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 07:59:13 by dreule            #+#    #+#             */
-/*   Updated: 2024/10/30 14:18:07 by dreule           ###   ########.fr       */
+/*   Updated: 2024/10/30 15:55:05 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ char	*get_next_line(int fd)
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
 		return (NULL);
-	line = find_line(fd, buffer, leftovers);
+	line = find_line(fd, buffer, &leftovers);
 	free(buffer);
 	if (!line && leftovers)
 	{

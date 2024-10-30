@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 07:59:27 by dreule            #+#    #+#             */
-/*   Updated: 2024/10/30 14:18:36 by dreule           ###   ########.fr       */
+/*   Updated: 2024/10/30 15:58:10 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,28 +31,35 @@ char	*ft_strjoin_gnl(char const *s1, char const *s2)
 	size_t	len1;
 	size_t	len2;
 
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	new_str = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	len1 = ft_strlen_gnl(s1);
+	len2 = ft_strlen_gnl(s2);
+	new_str = malloc(ft_strlen_gnl(s1) + ft_strlen_gnl(s2) + 1);
 	if (!new_str)
 		return (NULL);
-	ft_strlcpy(new_str, s1, len1 + 1);
-	ft_strlcpy(new_str + len1, s2, len2 +1);
+	ft_strlcpy_gnl(new_str, s1, len1 + 1);
+	ft_strlcpy_gnl(new_str + len1, s2, len2 +1);
 	return (new_str);
 }
 
-char	*ft_strcpy_gnl(char *dest, char *src)
+size_t	ft_strlcpy_gnl(char *dst, const char *src, size_t dstsize)
 {
-	int	i;
+	size_t	i;
+	size_t	len;
 
 	i = 0;
-	while (src[i] != '\0')
+	len = 0;
+	if (dstsize > 0)
 	{
-		dest[i] = src[i];
-		i++;
+		while (src[i] != '\0' && i < dstsize -1)
+		{
+			dst[i] = src[i];
+			i++;
+		}
+		dst[i] = '\0';
 	}
-	dest[i] = '\0';
-	return (dest);
+	while (src[len] != '\0')
+		len++;
+	return (len);
 }
 
 char	*ft_strcat_gnl(char *dest, char *src)
