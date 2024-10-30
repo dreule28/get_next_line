@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 07:59:13 by dreule            #+#    #+#             */
-/*   Updated: 2024/10/29 13:41:37 by dreule           ###   ########.fr       */
+/*   Updated: 2024/10/30 14:18:07 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	*extract_line(char **leftovers)
 {
 	char	*ext_line;
 	char	*line_pos;
-	char	*temp_letfovers;
+	char	*temp_leftovers;
 
 	if (!*leftovers)
 		return (NULL);
@@ -65,9 +65,9 @@ char	*extract_line(char **leftovers)
 	{
 		*(line_pos + 1) = '\0';
 		ext_line = ft_strdup_gnl(*leftovers);
-		temp_letfovers = ft_strdup_gnl(line_pos + 1);
+		temp_leftovers = ft_strdup_gnl(line_pos + 1);
 		free(*leftovers);
-		*leftovers = temp_letfovers;
+		*leftovers = temp_leftovers;
 	}
 	else
 	{
@@ -78,56 +78,47 @@ char	*extract_line(char **leftovers)
 	return (ext_line);
 }
 
-size_t	ft_strlcat_gnl(char *dst, const char *src, size_t dstsize)
+char	*find_line(int fd, char *buffer, char **leftovers)
 {
-	size_t	dst_len;
-	size_t	src_len;
-	size_t	i;
-	size_t	j;
+	char	*combined;
+	ssize_t	bytes_read;
 
-	dst_len = 0;
-	src_len = 0;
-	while (dst[dst_len] != '\0' && dst_len < dstsize)
-		dst_len++;
-	while (src[src_len] != '\0')
-		src_len++;
-	if (dstsize <= dst_len)
-		return (dstsize + src_len);
-	i = dst_len;
-	j = 0;
-	while (src[j] != '\0' && (i + 1) < dstsize)
+	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	while (bytes_read > 0)
 	{
-		dst[i] = src[j];
-		i++;
-		j++;
+		buffer[bytes_read] = '\0';
+		combined = ft_strjoin_gnl(*leftovers, buffer);
+		if (!combined)
+			return (NULL);
+		free(*leftovers);
+		*leftovers = combined;
+		if (ft_strchr_gnl(buffer, '\n'))
+			break ;
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
 	}
-	dst[i] = '\0';
-	return (dst_len + src_len);
+	return (extract_line(leftovers));
 }
 
 char	*get_next_line(int fd)
 {
 	static char	*leftovers;
-	char		*found_line;
 	char		*buffer;
-	char		*combined;
-	size_t		bytes_read;
+	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	found_line = extract_line(&leftovers);
-	if (found_line)
-		return (found_line);
+	if (leftovers && ft_strchr_gnl(leftovers, '\n'))
+		return (extract_line(&leftovers));
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
 		return (NULL);
-	bytes_read = read(fd, buffer, BUFFER_SIZE + 1);
-	while (bytes_read > 0)
+	line = find_line(fd, buffer, leftovers);
+	free(buffer);
+	if (!line && leftovers)
 	{
-		buffer[bytes_read] = '\0';
-		combined = malloc(ft_strlen_gnl(leftovers) + bytes_read + 1);
-		if (!combined)
-			free(buffer);
-		return (NULL);
+		line = ft_strdup_gnl(leftovers);
+		free(leftovers);
+		leftovers = NULL;
 	}
+	return (line);
 }
