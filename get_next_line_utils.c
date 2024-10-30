@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 07:59:27 by dreule            #+#    #+#             */
-/*   Updated: 2024/10/30 15:58:10 by dreule           ###   ########.fr       */
+/*   Updated: 2024/10/30 16:09:35 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,23 @@ char	*ft_strcat_gnl(char *dest, char *src)
 	}
 	dest[i + j] = '\0';
 	return (dest);
+}
+
+char	*ft_substr_gnl(char const *s, unsigned int start, size_t len)
+{
+	char	*substr;
+	size_t	str_len;
+
+	if (!s)
+		return (NULL);
+	str_len = ft_strlen_gnl(s);
+	if (start >= str_len)
+		return (ft_strdup_gnl(""));
+	if (len > str_len - start)
+		len = str_len - start;
+	substr = malloc(len +1);
+	if (!substr)
+		return (NULL);
+	ft_strlcpy_gnl(substr, s + start, len + 1);
+	return (substr);
 }

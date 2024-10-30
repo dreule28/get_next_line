@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 07:59:13 by dreule            #+#    #+#             */
-/*   Updated: 2024/10/30 15:55:05 by dreule           ###   ########.fr       */
+/*   Updated: 2024/10/30 18:15:06 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	*ft_strdup_gnl(const char *s1)
 {
 	char		*store;
 	size_t		i;
-	int			len;
+	size_t		len;
 	const char	*temp;
 
 	i = 0;
@@ -64,7 +64,7 @@ char	*extract_line(char **leftovers)
 	if (line_pos)
 	{
 		*(line_pos + 1) = '\0';
-		ext_line = ft_strdup_gnl(*leftovers);
+		ext_line = ft_substr_gnl(*leftovers, 0, line_pos - *leftovers + 1);
 		temp_leftovers = ft_strdup_gnl(line_pos + 1);
 		free(*leftovers);
 		*leftovers = temp_leftovers;
@@ -84,12 +84,17 @@ char	*find_line(int fd, char *buffer, char **leftovers)
 	ssize_t	bytes_read;
 
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	if (bytes_read <= 0)
+		return (extract_line(leftovers));
 	while (bytes_read > 0)
 	{
 		buffer[bytes_read] = '\0';
 		combined = ft_strjoin_gnl(*leftovers, buffer);
 		if (!combined)
+		{
+			free(buffer);
 			return (NULL);
+		}
 		free(*leftovers);
 		*leftovers = combined;
 		if (ft_strchr_gnl(buffer, '\n'))
@@ -116,9 +121,14 @@ char	*get_next_line(int fd)
 	free(buffer);
 	if (!line && leftovers)
 	{
-		line = ft_strdup_gnl(leftovers);
-		free(leftovers);
-		leftovers = NULL;
+		if (ft_strchr_gnl(leftovers, '\n'))
+			line = extract_line(&leftovers);
+		else
+		{
+			line = ft_strdup_gnl(leftovers);
+			free(leftovers);
+			leftovers = NULL;
+		}
 	}
 	return (line);
 }
