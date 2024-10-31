@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 07:59:13 by dreule            #+#    #+#             */
-/*   Updated: 2024/10/31 10:02:44 by dreule           ###   ########.fr       */
+/*   Updated: 2024/10/31 10:23:38 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ char	*find_line(int fd, char *buffer, char **leftovers)
 		return (NULL);
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
 	if (bytes_read < 0)
-		set_leftovers_null(*leftovers);
+		return (set_leftovers_null(leftovers), NULL);
 	if (bytes_read == 0)
 		return (extract_line(leftovers));
 	while (bytes_read > 0)
@@ -99,14 +99,14 @@ char	*find_line(int fd, char *buffer, char **leftovers)
 		buffer[bytes_read] = '\0';
 		combined = ft_strjoin_gnl(*leftovers, buffer);
 		if (!combined)
-			set_leftovers_null(*leftovers);
+			return (set_leftovers_null(leftovers), NULL);
 		free(*leftovers);
 		*leftovers = combined;
 		if (ft_strchr_gnl(buffer, '\n'))
 			break ;
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read < 0)
-			set_leftovers_null(*leftovers);
+			return (set_leftovers_null(leftovers), NULL);
 	}
 	return (extract_line(leftovers));
 }
@@ -116,8 +116,10 @@ char	*get_next_line(int fd)
 	static char	*leftovers;
 	char		*buffer;
 	char		*line;
+	ssize_t		bytes_read;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	bytes_read = read(fd, NULL, 0);
+	if (fd < 0 || BUFFER_SIZE <= 0 || bytes_read < 0)
 	{
 		free(leftovers);
 		leftovers = NULL;
