@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 07:59:13 by dreule            #+#    #+#             */
-/*   Updated: 2024/10/31 10:23:38 by dreule           ###   ########.fr       */
+/*   Updated: 2024/10/31 10:38:58 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,16 +62,17 @@ char	*extract_line(char **leftovers)
 	char	*line_pos;
 	char	*temp_leftovers;
 
-	if (!leftovers || !*leftovers)
-		return (NULL);
+	if (!leftovers || !*leftovers || !**leftovers)
+		return (set_leftovers_null(leftovers), NULL);
 	line_pos = ft_strchr_gnl(*leftovers, '\n');
 	if (line_pos)
 	{
 		ext_line = ft_substr_gnl(*leftovers, 0, line_pos - *leftovers + 1);
+		if (!ext_line)
+			return (set_leftovers_null(leftovers), NULL);
 		temp_leftovers = ft_strdup_gnl(line_pos + 1);
 		free(*leftovers);
 		*leftovers = temp_leftovers;
-		return (ext_line);
 	}
 	else
 	{
@@ -79,6 +80,8 @@ char	*extract_line(char **leftovers)
 		free(*leftovers);
 		*leftovers = NULL;
 	}
+	if (ext_line && !*ext_line)
+		return (free(ext_line), NULL);
 	return (ext_line);
 }
 

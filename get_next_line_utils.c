@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 07:59:27 by dreule            #+#    #+#             */
-/*   Updated: 2024/10/31 10:14:27 by dreule           ###   ########.fr       */
+/*   Updated: 2024/10/31 10:38:01 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ char	*ft_strjoin_gnl(char const *s1, char const *s2)
 	size_t	len2;
 
 	if (!s1)
-		s1 = "";
+		s1 = NULL;
 	if (!s2)
-		s2 = "";
+		s2 = NULL;
 	len1 = ft_strlen_gnl(s1);
 	len2 = ft_strlen_gnl(s2);
 	new_str = malloc(len1 + len2 + 1);
@@ -84,6 +84,8 @@ char	*ft_substr_gnl(char const *s, unsigned int start, size_t len)
 		return (ft_strdup_gnl(""));
 	if (len > str_len - start)
 		len = str_len - start;
+	if (len == 0)
+		return (ft_strdup_gnl(""));
 	substr = malloc(len +1);
 	if (!substr)
 		return (NULL);
