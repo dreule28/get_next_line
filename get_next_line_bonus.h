@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 18:46:57 by danielreule       #+#    #+#             */
-/*   Updated: 2024/11/04 11:28:01 by dreule           ###   ########.fr       */
+/*   Updated: 2024/11/04 11:46:00 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 char	*get_next_line(int fd);
 char	*ft_strdup_gnl(const char *s1);
 char	*ft_strchr_gnl(const char *str, int c);
-char	*extract_line(char *leftovers[], int fd);
+char	*extract_line(char **leftovers, int fd);
 size_t	ft_strlen_gnl(const char *str);
 char	*ft_strjoin_gnl(char const *s1, char const *s2);
 size_t	ft_strlcpy_gnl(char *dst, const char *src, size_t dstsize);

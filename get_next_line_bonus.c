@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 18:45:56 by danielreule       #+#    #+#             */
-/*   Updated: 2024/11/04 11:29:23 by dreule           ###   ########.fr       */
+/*   Updated: 2024/11/04 11:46:38 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ char	*find_line(int fd, char *buffer, char *leftovers[])
 	char	*combined;
 	ssize_t	bytes_read;
 
-	if (!buffer || !leftovers[fd])
+	if (!buffer || !leftovers[fd] || fd >= 10240)
 		return (NULL);
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
 	if (bytes_read < 0)
@@ -104,7 +104,7 @@ char	*find_line(int fd, char *buffer, char *leftovers[])
 			return (set_leftovers_null(&leftovers[fd]), NULL);
 		free(leftovers[fd]);
 		leftovers[fd] = combined;
-		if (ft_strchr_gnl(buffer, '\n'))
+		if (ft_strchr_gnl(leftovers[fd], '\n'))
 			break ;
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read < 0)
@@ -121,7 +121,7 @@ char	*get_next_line(int fd)
 	ssize_t		bytes_read;
 
 	bytes_read = read(fd, NULL, 0);
-	if (fd < 0 || BUFFER_SIZE <= 0 || bytes_read < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || bytes_read < 0 || fd >= 10240)
 	{
 		free(leftovers[fd]);
 		leftovers[fd] = NULL;

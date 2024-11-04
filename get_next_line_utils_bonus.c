@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 18:46:48 by danielreule       #+#    #+#             */
-/*   Updated: 2024/11/04 11:30:21 by dreule           ###   ########.fr       */
+/*   Updated: 2024/11/04 11:52:39 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,12 @@ char	*ft_strjoin_gnl(char const *s1, char const *s2)
 	size_t	len1;
 	size_t	len2;
 
+	if (!s1 && !s2)
+		return (ft_strdup_gnl(""));
 	if (!s1)
-		s1 = NULL;
+		return (ft_strdup_gnl(s2));
 	if (!s2)
-		s2 = NULL;
+		return (ft_strdup_gnl(s1));
 	len1 = ft_strlen_gnl(s1);
 	len2 = ft_strlen_gnl(s2);
 	new_str = malloc(len1 + len2 + 1);
@@ -93,7 +95,7 @@ char	*ft_substr_gnl(char const *s, unsigned int start, size_t len)
 	return (substr);
 }
 
-void	set_leftovers_null(char *leftovers[])
+void	set_leftovers_null(char **leftovers)
 {
 	if (leftovers && *leftovers)
 	{
