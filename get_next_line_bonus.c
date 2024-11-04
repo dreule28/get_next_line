@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 18:45:56 by danielreule       #+#    #+#             */
-/*   Updated: 2024/11/04 13:42:34 by dreule           ###   ########.fr       */
+/*   Updated: 2024/11/04 13:52:59 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	*ft_strdup_gnl(const char *s1)
 	return (store);
 }
 
-char	*extract_line(char *leftovers[], int fd)
+char	*extract_line(char **leftovers, int fd)
 {
 	char	*ex_line;
 	char	*line_pos;
@@ -67,15 +67,15 @@ char	*extract_line(char *leftovers[], int fd)
 	line_pos = ft_strchr_gnl(leftovers[fd], '\n');
 	if (line_pos)
 	{
-		ex_line = ft_substr_gnl(leftovers[fd], 0, (line_pos - leftovers[fd]) + 1);
+		ex_line = ft_substr_gnl(leftovers[fd], 0,
+				(line_pos - leftovers[fd]) + 1);
 		if (!ex_line)
 			return (set_leftovers_null(&leftovers[fd]), NULL);
 		temp_leftovers = ft_strdup_gnl(line_pos + 1);
 		if (!temp_leftovers && *line_pos)
 			return (free(ex_line), set_leftovers_null(&leftovers[fd]), NULL);
 		free(leftovers[fd]);
-		leftovers[fd] = temp_leftovers;
-		return (ex_line);
+		return (leftovers[fd] = temp_leftovers, ex_line);
 	}
 	ex_line = ft_strdup_gnl(leftovers[fd]);
 	free(leftovers[fd]);
