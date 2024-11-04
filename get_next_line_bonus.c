@@ -6,7 +6,7 @@
 /*   By: dreule <dreule@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 18:45:56 by danielreule       #+#    #+#             */
-/*   Updated: 2024/11/04 11:46:38 by dreule           ###   ########.fr       */
+/*   Updated: 2024/11/04 13:42:34 by dreule           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	*ft_strdup_gnl(const char *s1)
 
 char	*extract_line(char *leftovers[], int fd)
 {
-	char	*ext_line;
+	char	*ex_line;
 	char	*line_pos;
 	char	*temp_leftovers;
 
@@ -67,21 +67,22 @@ char	*extract_line(char *leftovers[], int fd)
 	line_pos = ft_strchr_gnl(leftovers[fd], '\n');
 	if (line_pos)
 	{
-		ext_line = ft_substr_gnl(leftovers[fd], 0,
-				line_pos - leftovers[fd] + 1);
-		if (!ext_line)
+		ex_line = ft_substr_gnl(leftovers[fd], 0, (line_pos - leftovers[fd]) + 1);
+		if (!ex_line)
 			return (set_leftovers_null(&leftovers[fd]), NULL);
 		temp_leftovers = ft_strdup_gnl(line_pos + 1);
+		if (!temp_leftovers && *line_pos)
+			return (free(ex_line), set_leftovers_null(&leftovers[fd]), NULL);
 		free(leftovers[fd]);
 		leftovers[fd] = temp_leftovers;
+		return (ex_line);
 	}
-	else
-		ext_line = ft_strdup_gnl(leftovers[fd]);
+	ex_line = ft_strdup_gnl(leftovers[fd]);
 	free(leftovers[fd]);
 	leftovers[fd] = NULL;
-	if (ext_line && !*ext_line)
-		return (free(ext_line), NULL);
-	return (ext_line);
+	if (ex_line && !*ex_line)
+		return (free(ex_line), NULL);
+	return (ex_line);
 }
 
 char	*find_line(int fd, char *buffer, char *leftovers[])
@@ -89,7 +90,7 @@ char	*find_line(int fd, char *buffer, char *leftovers[])
 	char	*combined;
 	ssize_t	bytes_read;
 
-	if (!buffer || !leftovers[fd] || fd >= 10240)
+	if (!buffer || fd >= 10240)
 		return (NULL);
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
 	if (bytes_read < 0)
