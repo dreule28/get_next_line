@@ -1,4 +1,4 @@
-# GET_NEXT_LINE
+# 📖 get_next_line
 Reads a file line by line from any file descriptor, using a static buffer. Handles partial reads, newline terminations, and memory safety.
 
 🛠️ Features
